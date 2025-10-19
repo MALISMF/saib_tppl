@@ -110,10 +110,10 @@ convert_digits:
     inc ecx
     
 print_string:
-    inc rsi             ; указатель на начало строки
+    inc rsi             
     mov rax, 1
     mov rdi, 1
-    mov rdx, rcx        ; длина строки
+    mov rdx, rcx       
     syscall
     
     pop rdi
