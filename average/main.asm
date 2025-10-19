@@ -3,7 +3,6 @@ section .data
     y dd 0, 10, 1, 9, 2, 8, 5
     count equ 7
     
-    ; Строки для вывода
     avg_msg db "Average: ", 0
     newline db 10, 0
     minus_sign db "-", 0
@@ -12,7 +11,7 @@ section .data
 section .bss
     sum resd 1
     average resd 1
-    buffer resb 32      ; буфер для преобразования числа в строку
+    buffer resb 32
 
 section .text
     global _start
@@ -28,9 +27,9 @@ calculate_sum:
     mov ecx, 0
 
 sum_loop:
-    mov ebx, [x + ecx * 4]    ; x[i]
-    sub ebx, [y + ecx * 4]    ; x[i] - y[i]
-    add eax, ebx              ; добавляем к сумме
+    mov ebx, [x + ecx * 4]
+    sub ebx, [y + ecx * 4]
+    add eax, ebx
     
     inc ecx
     cmp ecx, count
@@ -41,7 +40,7 @@ sum_loop:
 
 calculate_avg:
     mov eax, [sum]
-    cdq                 ; расширение знака eax в edx:eax
+    cdq
     mov ebx, count
     idiv ebx
     mov [average], eax
@@ -49,18 +48,15 @@ calculate_avg:
 
 
 print_results:
-    ; Вывод "Average: "
     mov rax, 1
     mov rdi, 1
     mov rsi, avg_msg
     mov rdx, 10
     syscall
     
-    ; Вывод значения среднего
     mov eax, [average]
     call print_number
     
-    ; Вывод новой строки
     mov rax, 1
     mov rdi, 1
     mov rsi, newline
@@ -70,8 +66,6 @@ print_results:
     ret
 
 print_number:
-    ; Функция для вывода 32-битного числа
-    ; eax содержит число для вывода
     push rax
     push rbx
     push rcx
@@ -79,30 +73,27 @@ print_number:
     push rsi
     push rdi
     
-    mov edi, eax        ; сохраняем число в edi
-    mov rsi, buffer     ; указатель на буфер
-    add rsi, 31         ; начинаем с конца буфера
-    mov byte [rsi], 0   ; нулевой байт в конце
+    mov edi, eax
+    mov rsi, buffer
+    add rsi, 31
+    mov byte [rsi], 0
     dec rsi
     
-    mov ebx, 10         ; делитель
-    xor ecx, ecx        ; счетчик цифр
+    mov ebx, 10
+    xor ecx, ecx
     
-    ; Проверка на отрицательное число
     mov eax, edi
     test eax, eax
     jns positive_number
     
-    ; Отрицательное число
     neg eax
-    mov edi, 1          ; флаг отрицательного числа
+    mov edi, 1
     jmp convert_digits
     
 positive_number:
-    xor edi, edi        ; флаг положительного числа
+    xor edi, edi
     
 convert_digits:
-    ; Преобразование числа в строку (в обратном порядке)
     xor edx, edx
     div ebx
     add dl, '0'
@@ -112,7 +103,6 @@ convert_digits:
     test eax, eax
     jnz convert_digits
     
-    ; Если число было отрицательным, добавляем минус
     test edi, edi
     jz print_string
     mov byte [rsi], '-'
@@ -120,10 +110,9 @@ convert_digits:
     inc ecx
     
 print_string:
-    ; Вывод строки
     inc rsi             ; указатель на начало строки
-    mov rax, 1          ; sys_write
-    mov rdi, 1          ; stdout
+    mov rax, 1
+    mov rdi, 1
     mov rdx, rcx        ; длина строки
     syscall
     
