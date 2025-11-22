@@ -1,17 +1,17 @@
 use std::collections::HashMap;
 use std::io::{self, Write};
 
-struct Cow {
-    cells: HashMap<i32, i32>,
-    current: i32,
-    register: Option<i32>,
-    ip: usize,
-    instructions: Vec<String>,
-    loop_map: HashMap<usize, usize>,
+pub struct Cow {
+    pub cells: HashMap<i32, i32>,
+    pub current: i32,
+    pub register: Option<i32>,
+    pub ip: usize,
+    pub instructions: Vec<String>,
+    pub loop_map: HashMap<usize, usize>,
 }
 
 impl Cow {
-    fn new(code: String) -> Result<Self, String> {
+    pub fn new(code: String) -> Result<Self, String> {
         let instructions: Vec<String> = code
             .split_whitespace()
             .map(|s| s.to_string())
@@ -33,7 +33,7 @@ impl Cow {
         Ok(cow)
     }
 
-    fn build_loop_map(&mut self) -> Result<(), String> {
+    pub fn build_loop_map(&mut self) -> Result<(), String> {
         let mut stack: Vec<usize> = Vec::new();
 
         for (i, command) in self.instructions.iter().enumerate() {
@@ -56,47 +56,45 @@ impl Cow {
         Ok(())
     }
 
-    fn get_val(&self) -> i32 {
+    pub fn get_val(&self) -> i32 {
         *self.cells.get(&self.current).unwrap_or(&0)
     }
 
-    fn set_val(&mut self, val: i32) {
+    pub fn set_val(&mut self, val: i32) {
         self.cells.insert(self.current, val);
     }
 
-    // --- Команды ---
-
-    fn moo_cmd(&mut self) {
+    pub fn moo_cmd(&mut self) {
         self.set_val(self.get_val() + 1);
     }
 
-    fn moo_cmd_2(&mut self) {
+    pub fn moo_cmd_2(&mut self) {
         self.set_val(self.get_val() - 1);
     }
 
-    fn moo_cmd_3(&mut self) {
+    pub fn moo_cmd_3(&mut self) {
         self.current += 1;
     }
 
-    fn moo_cmd_4(&mut self) {
+    pub fn moo_cmd_4(&mut self) {
         self.current -= 1;
     }
 
-    fn moo_cmd_5(&mut self) {
+    pub fn moo_cmd_5(&mut self) {
         if self.get_val() == 0 {
             self.ip = self.loop_map[&self.ip];
         }
     }
 
-    fn moo_cmd_6(&mut self) {
+    pub fn moo_cmd_6(&mut self) {
         self.ip = self.loop_map[&self.ip] - 1;
     }
 
-    fn moo_cmd_7(&self) {
+    pub fn moo_cmd_7(&self) {
         println!("{}", self.get_val());
     }
 
-    fn moo_cmd_8(&mut self) {
+    pub fn moo_cmd_8(&mut self) {
         print!("Введите число: ");
         io::stdout().flush().unwrap();
         
@@ -108,11 +106,9 @@ impl Cow {
         }
     }
 
-    fn moo_cmd_9(&self) {
-        // Placeholder для функции с кодом 3
-    }
+    pub fn moo_cmd_9(&self) {}
 
-    fn moo_cmd_10(&mut self) {
+    pub fn moo_cmd_10(&mut self) {
         let val = self.get_val();
         if val == 0 {
             self.moo_cmd_8();
@@ -122,11 +118,11 @@ impl Cow {
         }
     }
 
-    fn moo_cmd_11(&mut self) {
+    pub fn moo_cmd_11(&mut self) {
         self.set_val(0);
     }
 
-    fn moo_cmd_12(&mut self) {
+    pub fn moo_cmd_12(&mut self) {
         if self.register.is_none() {
             self.register = Some(self.get_val());
         } else {
@@ -135,7 +131,7 @@ impl Cow {
         }
     }
 
-    fn run(&mut self) -> Result<(), String> {
+    pub fn run(&mut self) -> Result<(), String> {
         while self.ip < self.instructions.len() {
             let cmd = &self.instructions[self.ip].clone();
 
@@ -152,7 +148,7 @@ impl Cow {
                 "Moo" => self.moo_cmd_10(),
                 "OOO" => self.moo_cmd_11(),
                 "MMM" => self.moo_cmd_12(),
-                _ => {} // Игнорируем неизвестные команды
+                _ => {}
             }
 
             self.ip += 1;
@@ -160,17 +156,4 @@ impl Cow {
 
         Ok(())
     }
-}
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let code_example = r#"MoO MoO MoO MoO MoO MoO MoO MoO MOO moO MoO MoO MoO MoO MoO moO MoO MoO MoO MoO moO MoO MoO MoO MoO moO MoO MoO MoO MoO MoO MoO MoO
- MoO MoO moO MoO MoO MoO MoO mOo mOo mOo mOo mOo MOo moo moO moO moO moO Moo moO MOO mOo MoO moO MOo moo mOo MOo MOo MOo Moo MoO MoO 
- MoO MoO MoO MoO MoO Moo Moo MoO MoO MoO Moo MMM mOo mOo mOo MoO MoO MoO MoO Moo moO Moo MOO moO moO MOo mOo mOo MOo moo moO moO MoO 
- MoO MoO MoO MoO MoO MoO MoO Moo MMM MMM Moo MoO MoO MoO Moo MMM MOo MOo MOo Moo MOo MOo MOo MOo MOo MOo MOo MOo Moo mOo MoO Moo"#;
-
-    println!("Запуск кода:");
-    let mut cow = Cow::new(code_example.to_string())?;
-    cow.run()?;
-
-    Ok(())
 }
