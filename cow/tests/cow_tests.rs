@@ -33,7 +33,7 @@ fn test_move_right() {
 fn test_move_left() {
     let mut cow = Cow::new("moO mOo".to_string()).unwrap();
     cow.run().unwrap();
-    assert_eq!(cow.current, -1);
+    assert_eq!(cow.current, 0);
 }
 
 #[test]
@@ -63,7 +63,7 @@ fn test_register_swap() {
     let code = "MoO MoO MoO MMM moO MoO MoO MoO MoO MMM MOo MOo MOo MOo MOo MOo".to_string();
     let mut cow = Cow::new(code).unwrap();
     cow.run().unwrap();
-    assert_eq!(cow.get_val(), 3);
+    assert_eq!(cow.get_val(), -3);
 }
 
 #[test]
@@ -91,14 +91,14 @@ fn test_nested_loops() {
 }
 
 #[test]
-fn test_error_moo_without_MOO() {
+fn test_error_moo_without_moo() {
     let result = Cow::new("moo".to_string());
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("moo без MOO"));
 }
 
 #[test]
-fn test_error_MOO_without_moo() {
+fn test_error_moo_without_moo_closing() {
     let result = Cow::new("MOO".to_string());
     assert!(result.is_err());
     assert!(result.unwrap_err().contains("MOO без moo"));
@@ -124,7 +124,7 @@ fn test_cell_persistence() {
     let code = "MoO MoO moO MoO mOo MoO MoO".to_string();
     let mut cow = Cow::new(code).unwrap();
     cow.run().unwrap();
-    assert_eq!(cow.cells.get(&0).unwrap(), &2);
+    assert_eq!(cow.cells.get(&0).unwrap(), &4);
     assert_eq!(cow.cells.get(&1).unwrap(), &1);
 }
 

@@ -75,10 +75,17 @@ impl Cow {
 
     pub fn moo_cmd_3(&mut self) {
         self.current += 1;
+        if !self.cells.contains_key(&self.current) {
+            self.cells.insert(self.current, 0);
+        }
     }
 
     pub fn moo_cmd_4(&mut self) {
         self.current -= 1;
+        // Инициализируем ячейку, если её нет
+        if !self.cells.contains_key(&self.current) {
+            self.cells.insert(self.current, 0);
+        }
     }
 
     pub fn moo_cmd_5(&mut self) {
@@ -158,3 +165,4 @@ impl Cow {
         Ok(())
     }
 }
+
