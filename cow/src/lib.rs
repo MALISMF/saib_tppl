@@ -95,7 +95,9 @@ impl Cow {
     }
 
     pub fn moo_cmd_6(&mut self) {
-        self.ip = self.loop_map[&self.ip] - 1;
+        if self.get_val() != 0 {
+            self.ip = self.loop_map[&self.ip] - 1;
+        }
     }
 
     pub fn moo_cmd_7(&self) {

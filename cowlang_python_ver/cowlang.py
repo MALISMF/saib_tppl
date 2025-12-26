@@ -22,10 +22,8 @@ class Cow:
         stack = []
         for i, command in enumerate(self.instructions):
             if command == "MOO":
-                # MOO - это "Открывающая скобка"
                 stack.append(i)
             elif command == "moo":
-                # moo - это "Закрывающая скобка"
                 if not stack:
                     raise ValueError(f"Ошибка синтаксиса: moo без MOO (команда №{i+1})")
                 start = stack.pop()
@@ -64,10 +62,7 @@ class Cow:
         выполнение ПОСЛЕ соответствующего moo.
         """
         if self._get_val() == 0:
-            # Прыгаем к закрывающему moo. 
-            # После завершения такта цикла run(), ip увеличится на 1,
-            # и мы окажемся на команде, следующей сразу за moo.
-            self.ip = self.loop_map[self.ip]
+            self.ip = self.loop_map[self.ip] + 1
 
     def moo(self):
         """
@@ -75,11 +70,7 @@ class Cow:
         Описание с картинки:
         Ищет назад соответствующий MOO и начинает выполнение снова С НЕГО.
         """
-        # Прыгаем назад к MOO.
-        # ВАЖНО: Мы ставим ip на (адрес MOO - 1).
-        # Почему? Потому что в конце цикла run() произойдет self.ip += 1.
-        # В итоге ip станет равен адресу MOO, и в следующем такте выполнится команда MOO (проверка условия).
-        self.ip = self.loop_map[self.ip] - 1
+        self.ip = self.loop_map[self.ip]
 
     def OOM(self):
         """Вывод значения как числа"""
@@ -124,8 +115,8 @@ class Cow:
             "MOo": self.MOo,
             "moO": self.moO,
             "mOo": self.mOo,
-            "moo": self.moo, # Теперь это конец цикла
-            "MOO": self.MOO, # Теперь это начало цикла
+            "moo": self.moo, 
+            "MOO": self.MOO, 
             "OOM": self.OOM,
             "oom": self.oom,
             "mOO": self.mOO,
@@ -142,9 +133,6 @@ class Cow:
 
 # --- Тестирование ---
 
-# Теперь используем ваш ИСХОДНЫЙ пример кода, который падал.
-# С новой логикой (где MOO открывает цикл) он должен отработать,
-# если там действительно парные скобки.
 
 code_example = """ MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO
  MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO MoO

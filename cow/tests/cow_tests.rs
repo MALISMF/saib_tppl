@@ -76,7 +76,7 @@ fn test_simple_loop() {
 
 #[test]
 fn test_loop_multiple_iterations() {
-    let code = "MoO MoO MoO MOO moO MoO moo".to_string();
+    let code = "MoO MoO MoO MOO MOo moo".to_string();
     let mut cow = Cow::new(code).unwrap();
     cow.run().unwrap();
     assert_eq!(cow.get_val(), 0);
