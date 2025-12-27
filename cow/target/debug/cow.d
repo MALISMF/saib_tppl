@@ -1,1 +1,0 @@
-C:\Users\matve\OneDrive\Рабочий\ стол\saib_tppl\cow\target\debug\cow.exe: C:\Users\matve\OneDrive\Рабочий\ стол\saib_tppl\cow\src\lib.rs C:\Users\matve\OneDrive\Рабочий\ стол\saib_tppl\cow\src\main.rs

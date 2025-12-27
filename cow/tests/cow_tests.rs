@@ -149,3 +149,4 @@ fn test_negative_values() {
     cow.run().unwrap();
     assert_eq!(cow.get_val(), -3);
 }
+
