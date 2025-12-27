@@ -1,0 +1,13 @@
+[package]
+name = "pascal-interpreter"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "pascal_interpreter"
+path = "src/lib.rs"
+
+[[bin]]
+name = "pascal_interpreter"
+path = "src/main.rs"
+
